@@ -9,14 +9,10 @@
         update_cache: yes
       when: ansible_distribution == 'Ubuntu'
 
-    - name: remove apache 2 package
+    - name: remove apache 2 and php package
       apt:
-        name: apache2 
-        state: absent
-      when: ansible_distribution == 'Ubuntu'
-
-    - name: remove php support for apache
-      apt:
-        name: libapache2-mod-php
+        name: 
+          - apache2 
+          - libapache2-mod-php
         state: absent
       when: ansible_distribution == 'Ubuntu'
