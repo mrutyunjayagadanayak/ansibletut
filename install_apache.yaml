@@ -5,10 +5,9 @@
   tasks:
 
     - name: install apache and php 
-      apt:
+      package:
         name: 
           - "{{ apache_package }}"
           - "{{ php_package }}"
         state: latest
         update_cache: yes
-      when: ansible_distribution == 'Ubuntu'

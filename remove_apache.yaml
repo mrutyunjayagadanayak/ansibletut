@@ -11,4 +11,3 @@
           - "{{ php_package }}"
         state: absent
         update_cache: yes
-      when: ansible_distribution == 'Ubuntu'
