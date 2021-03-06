@@ -41,7 +41,7 @@
        name: mariadb
        state: latest
      when: ansible_distribution == "OracleLinux"
-		
+
    - name: install mariadb package (Ubuntu)
      apt:
        name: mariadb-server
