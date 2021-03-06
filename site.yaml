@@ -1,7 +1,7 @@
 ---
 - hosts: all
   become: true
-  tasks:
+  pre_tasks:
    - name: Install Updates (Oracle)
      dnf:
        update_only: yes
