@@ -2,22 +2,33 @@
 - hosts: all
   become: true
   tasks:
-    
- 
+   - name: Install Updates (Oracle)
+     dnf:
+       update_only: yes
+       update_cache: yes
+     when: ansible_distribution == "OracleLinux"
+
+   - name: Install Updates (Oracle)
+     apt:
+       upgrade: dist
+       update_cache: yes
+     when: ansible_distribution == "Ubuntu"
+
+- hosts: web_server
+  become: true
+  tasks: 
    - name: install apache and php for Ubuntu servers
      apt:
        name:
          - apache2
          - libapache2-mod-php
        state: latest
-       update_cache: yes
      when: ansible_distribution == "Ubuntu"
  
-   - name: install apache and php for CentOS servers
+   - name: install apache and php for OracleLinux servers
      dnf:
        name:
          - httpd
          - php
        state: latest
-       update_cache: yes
      when: ansible_distribution == "OracleLinux"
