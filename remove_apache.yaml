@@ -1,13 +1,24 @@
 ---
-
 - hosts: all
-  become: true
-  tasks:
+   become: true
+   tasks:
+ 
+   - name: install apache and php for Ubuntu servers
+     apt:
+       name:
+         - apache2
+         - libapache2-mod-php
+       state: absent
+       update_cache: yes
+     when: ansible_distribution == "Ubuntu"
+ 
+   - name: install apache and php for CentOS servers
+     dnf:
+       name:
+         - httpd
+         - php
+       state: absent
+       update_cache: yes
+     when: ansible_distribution == "OracleLinux"
 
-    - name: remove apache and php package
-      package:
-        name: 
-          - "{{ apache_package }}"
-          - "{{ php_package }}"
-        state: absent
-        update_cache: yes
+
