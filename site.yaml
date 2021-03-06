@@ -32,3 +32,18 @@
          - php
        state: latest
      when: ansible_distribution == "OracleLinux"
+
+- hosts: db_server
+  become: true
+	tasks:
+		- name: install Mariadb package (Oracle)
+		  dnf: 
+				name: mariadb
+				state: latest
+			when: ansible_distribution == "OracleLinux"
+		
+		- name: install mariadb package (Ubuntu)
+		  apt:
+				name: mariadb-server
+				state: latest
+			when: ansible_distribution == "Ubuntu"
