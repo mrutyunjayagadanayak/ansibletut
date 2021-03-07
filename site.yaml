@@ -2,14 +2,14 @@
 - hosts: all
   become: true
   pre_tasks:
-   - name: Install Updates (Oracle)
+   - name: update cache (Oracle)
      tags: always
      dnf:
        update_cache: yes
      changed_when: false
      when: ansible_distribution == "OracleLinux"
 
-   - name: Install Updates (Ubuntu)
+   - name: update cache (Ubuntu)
      tags: always
      apt:
        update_cache: yes
@@ -25,7 +25,7 @@
      authorized_key:
        user: simone
        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHaveNKmhrRXJ+5C73A001olPKlCeHoYmx6Y8YfuUVOg pocadmin@master-vm-01"
-       
+
 
 - hosts: workstations
   become: true
