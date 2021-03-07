@@ -62,6 +62,22 @@
        state: started
        enabled: yes
      when: ansible_distribution == "OracleLinux"
+
+   - name: change email address for admin
+     tags: apache,httpd,OracleLinux
+     lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       regexp: '^ServerAdmin'
+       line: ServerAdmin mg@pecha.com
+     when: ansible_distribution == "OracleLinux"
+     register: httpd_oracle
+
+   - name: restart httpd (OracleLinux)
+     tags: apache,httpd,OracleLinux
+     service:
+       name: httpd
+       state: restarted
+     when: httpd_oracle.changed
    
    - name: Copy default file for site
      tags: apache,httpd,apache2
