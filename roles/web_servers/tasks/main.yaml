@@ -1,0 +1,50 @@
+- name: install apache and php for Ubuntu servers
+  tags: apache,apache2,Ubuntu
+  apt:
+       name:
+         - apache2
+         - libapache2-mod-php
+       state: latest
+  when: ansible_distribution == "Ubuntu"
+ 
+- name: install apache and php for OracleLinux servers
+  tags: apache,httpd,OracleLinux
+  dnf:
+       name:
+         - httpd
+         - php
+       state: latest
+  when: ansible_distribution == "OracleLinux"
+
+- name: Start httpd (OracleLinux)
+  tags: apache,httpd,OracleLinux
+  service:
+       name: httpd
+       state: started
+       enabled: yes
+  when: ansible_distribution == "OracleLinux"
+
+- name: change email address for admin
+  tags: apache,httpd,OracleLinux
+  lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       regexp: '^ServerAdmin'
+       line: ServerAdmin mg@pecha.com
+  when: ansible_distribution == "OracleLinux"
+  register: httpd_oracle
+
+- name: restart httpd (OracleLinux)
+  tags: apache,httpd,OracleLinux
+  service:
+       name: httpd
+       state: restarted
+  when: httpd_oracle.changed
+   
+- name: Copy default file for site
+  tags: apache,httpd,apache2
+  copy: 
+       src: default_site.html
+       dest: /var/www/html/index.html
+       owner: root
+       group: root
+       mode: 0644
