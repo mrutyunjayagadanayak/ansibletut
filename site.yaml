@@ -37,8 +37,3 @@
    become: true
    roles:
      - db_servers
- 
- - hosts: file_servers
-   become: true
-   roles:
-     - file_servers
