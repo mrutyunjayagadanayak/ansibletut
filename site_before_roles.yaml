@@ -1,0 +1,117 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+   - name: update cache (Oracle)
+     tags: always
+     dnf:
+       update_cache: yes
+     changed_when: false
+     when: ansible_distribution == "OracleLinux"
+
+   - name: update cache (Ubuntu)
+     tags: always
+     apt:
+       update_cache: yes
+     changed_when: false
+     when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  tasks:
+
+   - name: add ssh key for simone
+     tags: always
+     authorized_key:
+       user: simone
+       key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHaveNKmhrRXJ+5C73A001olPKlCeHoYmx6Y8YfuUVOg pocadmin@master-vm-01"
+
+
+- hosts: workstations
+  become: true
+  tasks:
+
+   - name: install unzip
+     package:
+       name: unzip
+       state: latest
+       
+   - name: install terraform
+     unarchive:
+       src: https://releases.hashicorp.com/terraform/0.14.7/terraform_0.14.7_linux_amd64.zip
+       dest: /usr/local/bin
+       remote_src: yes
+       mode: 0775
+       owner: root
+       group: root
+
+- hosts: web_server
+  become: true
+  tasks: 
+   - name: install apache and php for Ubuntu servers
+     tags: apache,apache2,Ubuntu
+     apt:
+       name:
+         - apache2
+         - libapache2-mod-php
+       state: latest
+     when: ansible_distribution == "Ubuntu"
+ 
+   - name: install apache and php for OracleLinux servers
+     tags: apache,httpd,OracleLinux
+     dnf:
+       name:
+         - httpd
+         - php
+       state: latest
+     when: ansible_distribution == "OracleLinux"
+
+   - name: Start httpd (OracleLinux)
+     tags: apache,httpd,OracleLinux
+     service:
+       name: httpd
+       state: started
+       enabled: yes
+     when: ansible_distribution == "OracleLinux"
+
+   - name: change email address for admin
+     tags: apache,httpd,OracleLinux
+     lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       regexp: '^ServerAdmin'
+       line: ServerAdmin mg@pecha.com
+     when: ansible_distribution == "OracleLinux"
+     register: httpd_oracle
+
+   - name: restart httpd (OracleLinux)
+     tags: apache,httpd,OracleLinux
+     service:
+       name: httpd
+       state: restarted
+     when: httpd_oracle.changed
+   
+   - name: Copy default file for site
+     tags: apache,httpd,apache2
+     copy: 
+       src: default_site.html
+       dest: /var/www/html/index.html
+       owner: root
+       group: root
+       mode: 0644
+
+- hosts: db_server
+  become: true
+  tasks:
+   - name: install Mariadb package (Oracle)
+     tags: db, OracleLinux
+     dnf: 
+       name: mariadb
+       state: latest
+     when: ansible_distribution == "OracleLinux"
+
+   - name: install mariadb package (Ubuntu)
+     tags: db, Ubuntu
+     apt:
+       name: mariadb-server
+       state: latest
+     when: ansible_distribution == "Ubuntu"
