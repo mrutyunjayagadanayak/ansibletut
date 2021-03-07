@@ -20,14 +20,7 @@
        regexp: '^ServerAdmin'
        line: ServerAdmin mg@pecha.com
   when: ansible_distribution == "OracleLinux"
-  register: httpd_oracle
-
-- name: restart httpd (OracleLinux)
-  tags: apache,httpd,OracleLinux
-  service:
-       name: httpd
-       state: restarted
-  when: httpd_oracle.changed
+  notify: restart_apache
    
 - name: Copy default file for site
   tags: apache,httpd,apache2
