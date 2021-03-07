@@ -54,6 +54,13 @@
          - php
        state: latest
      when: ansible_distribution == "OracleLinux"
+
+   - name: Start httpd (OracleLinux)
+     tags: apache,httpd,OracleLinux
+     service:
+       name: httpd
+       state: started
+     when: ansible_distribution == "OracleLinux"
    
    - name: Copy default file for site
      tags: apache,httpd,apache2
