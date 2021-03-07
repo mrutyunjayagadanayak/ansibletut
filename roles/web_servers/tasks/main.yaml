@@ -1,28 +1,17 @@
-- name: install apache and php for Ubuntu servers
-  tags: apache,apache2,Ubuntu
-  apt:
+- name: install apache and php 
+  tags: apache,php,httpd
+  package:
        name:
-         - apache2
-         - libapache2-mod-php
+         - "{{ apache_package_name }}"
+         - "{{ php_package_name }}"
        state: latest
-  when: ansible_distribution == "Ubuntu"
- 
-- name: install apache and php for OracleLinux servers
-  tags: apache,httpd,OracleLinux
-  dnf:
-       name:
-         - httpd
-         - php
-       state: latest
-  when: ansible_distribution == "OracleLinux"
 
-- name: Start httpd (OracleLinux)
-  tags: apache,httpd,OracleLinux
+- name: Start httpd 
+  tags: apache,httpd
   service:
-       name: httpd
+       name: "{{ apache_service }}"
        state: started
        enabled: yes
-  when: ansible_distribution == "OracleLinux"
 
 - name: change email address for admin
   tags: apache,httpd,OracleLinux
