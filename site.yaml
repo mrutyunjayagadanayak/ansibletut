@@ -60,6 +60,7 @@
      service:
        name: httpd
        state: started
+       enabled: yes
      when: ansible_distribution == "OracleLinux"
    
    - name: Copy default file for site
