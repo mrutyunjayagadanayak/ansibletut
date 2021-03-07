@@ -4,3 +4,6 @@
 
 [db_server]
 10.0.1.4
+
+[workstations]
+10.0.1.6
