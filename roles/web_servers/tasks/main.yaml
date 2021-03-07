@@ -18,7 +18,7 @@
   lineinfile:
        path: /etc/httpd/conf/httpd.conf
        regexp: '^ServerAdmin'
-       line: ServerAdmin mg@pecha.com
+       line: ServerAdmin mg@pecha.in
   when: ansible_distribution == "OracleLinux"
   notify: restart_apache
    
